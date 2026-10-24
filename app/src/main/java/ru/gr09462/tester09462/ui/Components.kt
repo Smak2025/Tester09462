@@ -44,7 +44,7 @@ fun TestCard(
 ){
     val question = "${cardData.arg1} " +
             "${cardData.operation.symb} " +
-            if (cardData.arg2 < 0) "(" else "" +
+            (if (cardData.arg2 < 0) "(" else "") +
             "${cardData.arg2}" +
             if (cardData.arg2 < 0) ") = " else " = "
     ElevatedCard(
