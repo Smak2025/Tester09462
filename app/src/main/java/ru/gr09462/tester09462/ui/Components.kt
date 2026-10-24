@@ -37,16 +37,24 @@ fun TestCard(
     cardData: CardData,
     userInput: String,
     modifier: Modifier = Modifier,
+    isActive: Boolean = true,
     cardColor: Color = Color.Transparent,
     onUserInput: (String)->Unit = {},
     onAnswer: () -> Unit = {},
 ){
-    val question = "${cardData.arg1} ${cardData.operation.symb} ${cardData.arg2} ="
+    val question = "${cardData.arg1} " +
+            "${cardData.operation.symb} " +
+            if (cardData.arg2 < 0) "(" else "" +
+            "${cardData.arg2}" +
+            if (cardData.arg2 < 0) ") = " else " = "
     ElevatedCard(
         modifier = modifier,
+        colors = CardDefaults.elevatedCardColors(
+            containerColor = cardColor,
+        )
     ) {
         Column(
-            modifier = Modifier.fillMaxWidth().padding(12.dp).background(cardColor),
+            modifier = Modifier.fillMaxWidth().padding(12.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
@@ -66,9 +74,10 @@ fun TestCard(
                     onValueChange = onUserInput,
                     modifier = Modifier.weight(1f),
                     textStyle = TextStyle(fontSize = 30.sp, textAlign = TextAlign.Center),
+                    enabled = isActive,
                 )
             }
-            IconButton(onClick = onAnswer){
+            IconButton(onClick = onAnswer, enabled = isActive){
                 Icon(
                     painter = painterResource(R.drawable.baseline_add_task_32),
                     contentDescription = null

@@ -8,6 +8,8 @@ import androidx.activity.viewModels
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -27,13 +29,24 @@ class MainActivity : ComponentActivity() {
             Tester09462Theme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     Column(modifier = Modifier.padding(innerPadding)) {
-                        TestCard(
-                            vm.currentCard,
-                            vm.currentAnswer,
-                            cardColor = vm.cardColor,
-                            onUserInput = vm::onUserInput,
-                            onAnswer = vm::onAnswer,
-                        )
+                        if (vm.currentCardNum < MainViewModel.maxCardsCount) {
+                            LazyColumn(
+                                modifier = Modifier.fillMaxSize()
+                            ) {
+                                items(vm.cards.slice(0..if (vm.currentCardNum < MainViewModel.maxCardsCount) vm.currentCardNum else -1)) { cardState ->
+                                    TestCard(
+                                        cardState.card,
+                                        cardState.card.userAnswer?.toString() ?: vm.currentAnswer,
+                                        isActive = cardState.isActive,
+                                        cardColor = cardState.color,
+                                        onUserInput = vm::onUserInput,
+                                        onAnswer = vm::onAnswer,
+                                    )
+                                }
+                            }
+                        } else {
+                            Text("Тест финишд")
+                        }
                     }
                 }
             }
